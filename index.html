@@ -57,7 +57,7 @@
       margin-top: 10px;
     }
     .custom-input {
-      width: 100%;
+      width: 50%;
       padding: 10px;
       font-size: 16px;
       border: 2px solid #ccc;
@@ -69,9 +69,27 @@
     }
     #toggle-custom {
       cursor: pointer;
-      color: #007bff;
+      color: white;
+      background-color: black;
+      padding: 10px;
+      border-radius: 20px;
       margin-top: 10px;
-      display: block;
+      display: inline-block;
+    }
+    /* Spinner styles */
+    #loading-spinner {
+      display: none;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #555;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     body {
       background-image: url('https://i.imgur.com/6Ko5pKD.gif');
@@ -90,13 +108,15 @@
 </head>
 <body>
   <div id="form-container">
-    <div id="image-container"></div>
+    <div id="image-container">
+      <div id="loading-spinner"></div>
+    </div>
     <form onsubmit="return false;">
       <div id="text-input-container">
         <input type="text" id="text-input" name="text-input" placeholder="Insert your prompt..." onkeydown="handleKeyDown(event)">
         <input type="button" id="submit-button" value="Generate" onclick="displayImage()">
       </div>
-      <span id="toggle-custom" onclick="toggleCustom()">Custom Options (BETA)</span>
+      <span id="toggle-custom" onclick="toggleCustom()">Custom Options ✨</span>
       <div id="custom-options">
         <input type="text" id="width-input" class="custom-input" placeholder="Enter width (e.g: 1280)">
         <input type="text" id="height-input" class="custom-input" placeholder="Enter height (e.g: 720)">
@@ -111,10 +131,21 @@
       var width = document.getElementById("width-input").value.trim();
       var height = document.getElementById("height-input").value.trim();
       var seed = document.getElementById("seed-input").value.trim();
+      var spinner = document.getElementById("loading-spinner");
+      var imageContainer = document.getElementById("image-container");
 
+      // Search parameters can also be an object
+      const paramsObj = { foo: "bar", baz: "bar" };
+      const searchParams = new URLSearchParams(paramsObj);
+
+      console.log(searchParams.toString()); // "foo=bar&baz=bar"
       if (text !== "") {
+        // Show the loading spinner and image container
+        spinner.style.display = "block";
+        imageContainer.style.display = "block";
+
         var imageUrl = "https://image.pollinations.ai/prompt/" + encodeURIComponent(text);
-        
+
         if (width !== "") {
           imageUrl += "?width=" + encodeURIComponent(width);
         }
@@ -125,6 +156,7 @@
           imageUrl += "&seed=" + encodeURIComponent(seed);
         }
 
+        // Remove existing image if it exists
         var existingImage = document.getElementById("displayed-image");
         if (existingImage) {
           existingImage.remove();
@@ -133,7 +165,11 @@
         var image = document.createElement("img");
         image.id = "displayed-image";
         image.onload = function() {
-          document.getElementById("image-container").style.display = "block";
+          spinner.style.display = "none";  // Hide spinner when image is loaded
+        };
+        image.onerror = function() {
+          spinner.style.display = "none";  // Hide spinner if image fails to load
+          alert("Failed to load image. Please try again.");
         };
         image.src = imageUrl;
         document.getElementById("image-container").appendChild(image);
