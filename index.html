@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -7,129 +7,492 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
-<title>SpecAI - AI image generating tool powered by Pollinations AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>SpecAI - Professional AI Image Generation</title>
 <style>
-  #url-input {
-    display: none;
-  }
-  #image-container {
-    text-align: center;
-    max-width: 80%;
-    margin: 0 auto 20px;
-    padding: 10px;
+  * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #667eea;
+    text-decoration: none;
+  }
+
+  .nav {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav a {
+    color: #666;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .nav a:hover {
+    color: #667eea;
+  }
+
+  .floating-dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid #e1e5e9;
+    color: #667eea;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .floating-dark-mode-toggle:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .main-content {
+    padding: 4rem 0;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+  }
+
+  .hero {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .form-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .text-input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    background: white;
+    color: #333;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+
+  .text-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  .text-input::placeholder {
+    color: #999;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+  }
+
+  .input-row .form-group {
+    flex: 1;
+  }
+
+  .submit-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    min-width: 120px;
+  }
+
+  .submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .submit-button:active {
+    transform: translateY(0);
+  }
+
+  .submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .custom-toggle {
+    background: #f8f9fa;
+    border: 2px solid #e1e5e9;
+    color: #667eea;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .custom-toggle:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+  }
+
+  .custom-options {
+    display: none;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e1e5e9;
+  }
+
+  .custom-options.show {
+    display: block;
+  }
+
+  .custom-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    background: white;
+    color: #333;
+    margin-bottom: 1rem;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+  }
+
+  .custom-input:focus {
+    outline: none;
+    border-color: #667eea;
+  }
+
+  .image-container {
+    margin-top: 2rem;
+    text-align: center;
     display: none;
   }
-  #displayed-image {
+
+  .image-container.show {
+    display: block;
+  }
+
+  .displayed-image {
     max-width: 100%;
     height: auto;
-    border: 5px solid #ffffff;
-    border-radius: 10px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
   }
-  #form-container {
-    max-width: 400px;
-    margin: 20px auto;
-    text-align: center;
-    position: relative;
-  }
-  #text-input {
-    width: calc(70% - 20px);
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 20px;
-    color: white;
-    background-color: #555;
-    text-align: left;
-    box-sizing: border-box;
-  }
-  #text-input::placeholder {
-    color: #999;
-    font-style: italic;
-  }
-  #submit-button {
-    width: 32%;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    background-color: black;
-    color: white;
-    cursor: pointer;
-    border-radius: 20px;
-    margin-left: 1px;
-  }
-  #custom-options {
+
+  .loading-spinner {
     display: none;
-    margin-top: 10px;
-  }
-  .custom-input {
-    width: 50%;
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 20px;
-    color: white;
-    background-color: #555;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-  }
-  #toggle-custom {
-    cursor: pointer;
-    color: white;
-    background-color: black;
-    padding: 10px;
-    border-radius: 20px;
-    margin-top: 10px;
-    display: inline-block;
-  }
-  /* Spinner styles */
-  #loading-spinner {
-    display: none;
-    border: 6px solid #f3f3f3;
-    border-top: 6px solid #555;
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
     animation: spin 1s linear infinite;
-    margin: 20px auto;
+    margin: 2rem auto;
   }
+
+  .loading-spinner.show {
+    display: block;
+  }
+
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-  body {
-    background-image: url('https://i.imgur.com/imME9IT.png');
-    background-size: cover;
-    font-family: Arial, sans-serif;
+
+  .error-message {
+    background: #fee;
+    color: #c33;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    border: 1px solid #fcc;
+  }
+
+  .success-message {
+    background: #efe;
+    color: #363;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    border: 1px solid #cfc;
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+    
+    .hero p {
+      font-size: 1.1rem;
+    }
+    
+    .form-container {
+      padding: 1.5rem;
+      margin: 0 1rem;
+    }
+    
+    .input-row {
+      flex-direction: column;
+    }
+    
+    .nav {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+    
+    .form-container {
+      padding: 1rem;
+    }
+  }
+
+  /* Dark Mode Styles */
+  body.dark-mode {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e0e0e0;
+  }
+
+  body.dark-mode .header {
+    background: rgba(26, 26, 46, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  body.dark-mode .form-container {
+    background: rgba(26, 26, 46, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  body.dark-mode .form-label {
+    color: #e0e0e0;
+  }
+
+  body.dark-mode .text-input {
+    background: #2a2a3e;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+
+  body.dark-mode .text-input:focus {
+    border-color: #667eea;
+    background: #333;
+  }
+
+  body.dark-mode .text-input::placeholder {
+    color: #888;
+  }
+
+  body.dark-mode .custom-input {
+    background: #2a2a3e;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+
+  body.dark-mode .custom-input:focus {
+    border-color: #667eea;
+    background: #333;
+  }
+
+  body.dark-mode .custom-options {
+    background: #2a2a3e;
+    border-color: #444;
+  }
+
+  body.dark-mode .custom-toggle {
+    background: #2a2a3e;
+    border-color: #444;
+    color: #667eea;
+  }
+
+  body.dark-mode .custom-toggle:hover {
+    background: #667eea;
     color: white;
-    text-align: left;
-    padding: 20px;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    border-color: #667eea;
+  }
+
+  body.dark-mode .floating-dark-mode-toggle {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #444;
+    color: #ffd700;
+  }
+
+  body.dark-mode .floating-dark-mode-toggle:hover {
+    background: #ffd700;
+    color: #1a1a2e;
+    border-color: #ffd700;
   }
 </style>
 </head>
 <body>
-  <div id="form-container">
-    <div id="image-container">
-      <div id="loading-spinner"></div>
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="#" class="logo">SpecAI</a>
+        <nav class="nav">
+          <a href="https://github.com/spectre365/specai" target="_blank">About</a>
+        </nav>
+      </div>
     </div>
-    <form onsubmit="return false;">
-      <div id="text-input-container">
-        <input type="text" id="text-input" name="text-input" placeholder="Insert your prompt..." onkeydown="handleKeyDown(event)">
-        <input type="button" id="submit-button" value="Generate" onclick="displayImage()">
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="hero">
+        <h1>AI-Powered Image Generation</h1>
+        <p>Create stunning, professional images from text descriptions using advanced AI technology. Transform your ideas into visual reality with just a few words.</p>
+        
+        <div class="form-container">
+          <form onsubmit="return false;">
+            <div class="form-group">
+              <label for="text-input" class="form-label">Describe your image</label>
+              <input type="text" id="text-input" name="text-input" class="text-input" placeholder="A majestic mountain landscape at sunset..." onkeydown="handleKeyDown(event)">
+            </div>
+            
+            <div class="input-row">
+              <div class="form-group">
+                <button type="button" id="submit-button" class="submit-button" onclick="displayImage()">
+                  Generate Image
+                </button>
+              </div>
+            </div>
+            
+            <button type="button" id="toggle-custom" class="custom-toggle" onclick="toggleCustom()">
+              <span>⚙️</span> Advanced Options
+            </button>
+            
+            <div id="custom-options" class="custom-options">
+              <div class="form-group">
+                <label for="width-input" class="form-label">Width (pixels)</label>
+                <input type="text" id="width-input" class="custom-input" placeholder="e.g., 1280">
+              </div>
+              <div class="form-group">
+                <label for="height-input" class="form-label">Height (pixels)</label>
+                <input type="text" id="height-input" class="custom-input" placeholder="e.g., 720">
+              </div>
+              <div class="form-group">
+                <label for="seed-input" class="form-label">Seed (optional)</label>
+                <input type="text" id="seed-input" class="custom-input" placeholder="Random seed for reproducible results">
+              </div>
+            </div>
+          </form>
+          
+          <div id="image-container" class="image-container">
+            <div id="loading-spinner" class="loading-spinner"></div>
+          </div>
+        </div>
       </div>
-      <span id="toggle-custom" onclick="toggleCustom()">Custom Options ✨</span>
-      <div id="custom-options">
-        <input type="text" id="width-input" class="custom-input" placeholder="Enter width (e.g: 1280)">
-        <input type="text" id="height-input" class="custom-input" placeholder="Enter height (e.g: 720)">
-        <input type="text" id="seed-input" class="custom-input" placeholder="Enter seed (optional)">
-      </div>
-    </form>
-  </div>
+    </div>
+  </main>
+
+  <!-- Floating Dark Mode Toggle -->
+  <button id="dark-mode-toggle" class="floating-dark-mode-toggle" onclick="toggleDarkMode()">
+    <span id="dark-mode-icon">🌙</span>
+  </button>
 
   <script>
     function displayImage() {
@@ -139,10 +502,17 @@
       var seed = document.getElementById("seed-input").value.trim();
       var spinner = document.getElementById("loading-spinner");
       var imageContainer = document.getElementById("image-container");
+      var submitButton = document.getElementById("submit-button");
 
       if (text !== "") {
-        spinner.style.display = "block";
-        imageContainer.style.display = "block";
+        // Show loading state
+        spinner.classList.add("show");
+        imageContainer.classList.add("show");
+        submitButton.disabled = true;
+        submitButton.textContent = "Generating...";
+        
+        // Clear any existing messages
+        clearMessages();
 
         var imageUrl = "https://image.pollinations.ai/prompt/" + encodeURIComponent(text);
 
@@ -163,17 +533,23 @@
 
         var image = document.createElement("img");
         image.id = "displayed-image";
+        image.className = "displayed-image";
         image.onload = function() {
-          spinner.style.display = "none";
+          spinner.classList.remove("show");
+          submitButton.disabled = false;
+          submitButton.textContent = "Generate Image";
+          showMessage("Image generated successfully!", "success");
         };
         image.onerror = function() {
-          spinner.style.display = "none";
-          alert("Failed to load image. Please try again.");
+          spinner.classList.remove("show");
+          submitButton.disabled = false;
+          submitButton.textContent = "Generate Image";
+          showMessage("Failed to generate image. Please try again with a different prompt.", "error");
         };
         image.src = imageUrl;
         document.getElementById("image-container").appendChild(image);
       } else {
-        alert("Please, insert some text.");
+        showMessage("Please enter a description for your image.", "error");
       }
     }
 
@@ -185,8 +561,82 @@
 
     function toggleCustom() {
       var customOptions = document.getElementById("custom-options");
-      customOptions.style.display = customOptions.style.display === "block" ? "none" : "block";
+      customOptions.classList.toggle("show");
     }
+
+    function showMessage(message, type) {
+      // Remove any existing messages
+      clearMessages();
+      
+      var messageDiv = document.createElement("div");
+      messageDiv.className = type === "error" ? "error-message" : "success-message";
+      messageDiv.textContent = message;
+      
+      var formContainer = document.querySelector(".form-container");
+      formContainer.appendChild(messageDiv);
+      
+      // Auto-hide success messages after 3 seconds
+      if (type === "success") {
+        setTimeout(function() {
+          if (messageDiv.parentNode) {
+            messageDiv.parentNode.removeChild(messageDiv);
+          }
+        }, 3000);
+      }
+    }
+
+    function clearMessages() {
+      var existingMessages = document.querySelectorAll(".error-message, .success-message");
+      existingMessages.forEach(function(message) {
+        message.remove();
+      });
+    }
+
+    // Dark mode functionality
+    function toggleDarkMode() {
+      var body = document.body;
+      var darkModeIcon = document.getElementById('dark-mode-icon');
+      
+      body.classList.toggle('dark-mode');
+      
+      // Update icon
+      if (body.classList.contains('dark-mode')) {
+        darkModeIcon.textContent = '☀️';
+        localStorage.setItem('darkMode', 'enabled');
+      } else {
+        darkModeIcon.textContent = '🌙';
+        localStorage.setItem('darkMode', 'disabled');
+      }
+    }
+
+    // Load dark mode preference on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      var darkMode = localStorage.getItem('darkMode');
+      var darkModeIcon = document.getElementById('dark-mode-icon');
+      
+      if (darkMode === 'enabled') {
+        document.body.classList.add('dark-mode');
+        darkModeIcon.textContent = '☀️';
+      }
+
+      // Add smooth scrolling for navigation links
+      var navLinks = document.querySelectorAll('.nav a');
+      navLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          var href = this.getAttribute('href');
+          // Only prevent default for internal links (starting with #)
+          if (href.startsWith('#')) {
+            e.preventDefault();
+            var targetId = href.substring(1);
+            var targetElement = document.getElementById(targetId);
+            if (targetElement) {
+              targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+          }
+          // For external links, let the browser handle them normally
+        });
+      });
+    });
   </script>
 </body>
 </html>
