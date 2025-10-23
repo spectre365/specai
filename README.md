@@ -1,5 +1,6 @@
 ![alt text](https://raw.githubusercontent.com/spectre365/specai/refs/heads/main/android-chrome-192x192.png "SpecAI logo")
-**SpecAI**
+
+# SpecAI
 - A web-based image generator that uses Pollinations AI to convert text into digital art, providing users with the ability to define custom resolution (width and height) and the generation seed.
 
 🌐 Project Overview
