@@ -23,6 +23,7 @@ Quick Guide
 - Generate: Click the button to see the AI generate your custom image.
 
 💻 Technologies Used
+
 This project is built using the following main technologies:
 
 - Core API: Pollinations AI
